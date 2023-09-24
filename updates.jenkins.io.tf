@@ -12,7 +12,7 @@ data "cloudflare_zone" "cloudflare_jenkins_io" {
 
 ## West Europe
 resource "cloudflare_record" "westeurope" {
-  for_each = data.cloudflare_zone.cloudflare_jenkins_io.name_servers
+  for_each = toset(data.cloudflare_zone.cloudflare_jenkins_io.name_servers)
 
   zone_id = data.cloudflare_zone.cloudflare_jenkins_io.id
   name    = "westeurope"
