@@ -1,7 +1,7 @@
 locals {
   default_tags = {
     scope      = "terraform-managed"
-    repository = "jenkins-infra/azure"
+    repository = "jenkins-infra/cloudflare"
   }
 
   account_id = {
