@@ -11,11 +11,13 @@ resource "cloudflare_zone" "westeurope_cloudflare_jenkins_io" {
 }
 
 resource "cloudflare_record" "ns_westeurope" {
-  for_each = toset(cloudflare_zone.westeurope_cloudflare_jenkins_io.name_servers)
+  count = 2
+  # for_each = toset(cloudflare_zone.westeurope_cloudflare_jenkins_io.name_servers)
 
   zone_id = data.cloudflare_zone.cloudflare_jenkins_io.id
   name    = "westeurope"
-  value   = "${each.key}"
+  # value   = "${each.key}"
+  value   = cloudflare_zone.westeurope_cloudflare_jenkins_io.name_servers[count.index]
   type    = "NS"
   ttl     = 60
 }
