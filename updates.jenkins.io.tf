@@ -11,7 +11,7 @@ resource "cloudflare_zone" "westeurope_cloudflare_jenkins_io" {
 }
 
 resource "cloudflare_record" "ns_westeurope" {
-  count = length(data.cloudflare_jenkins_io.name_servers)
+  count = length(data.cloudflare_zone.cloudflare_jenkins_io.name_servers)
 
   zone_id = data.cloudflare_zone.cloudflare_jenkins_io.id
   name    = "westeurope"
