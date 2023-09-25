@@ -18,6 +18,8 @@ resource "cloudflare_record" "ns_westeurope" {
   value   = cloudflare_zone.westeurope_cloudflare_jenkins_io.name_servers[count.index]
   type    = "NS"
   ttl     = 60
+
+  tags = local.default_tags
 }
 
 resource "cloudflare_r2_bucket" "westeurope_updates_jenkins_io" {
