@@ -19,7 +19,7 @@ resource "cloudflare_record" "ns_westeurope" {
   type    = "NS"
   ttl     = 60
 
-  tags = local.default_tags
+  tags = [for key, value in local.default_tags : "${key}:${value}"]
 }
 
 resource "cloudflare_r2_bucket" "westeurope_updates_jenkins_io" {
