@@ -1,15 +1,18 @@
-# West Europe
-# resource "cloudflare_zone" "westeurope_cloudflare_jenkins_io" {
-#   account_id = local.account_id["jenkins-infra-team"]
-#   zone       = "westeurope.cloudflare.jenkins.io"
-# }
+resource "cloudflare_zone" "updates_jenkins_io" {
+  for_each = local.regions
 
-# resource "cloudflare_r2_bucket" "westeurope_updates_jenkins_io" {
-#   account_id = local.account_id["jenkins-infra-team"]
-#   name       = "westeurope-updates-jenkins-io"
-#   location   = "WEUR"
-# }
+  account_id = local.account_id["jenkins-infra-team"]
+  zone       = "${each.key}.cloudflare.jenkins.io"
+}
 
-# output "westeurope_cloudflare_jenkins_io_ns_records" {
-#   value = cloudflare_zone.westeurope_cloudflare_jenkins_io.name_servers
-# }
+resource "cloudflare_r2_bucket" "updates_jenkins_io" {
+  for_each = local.regions
+
+  account_id = local.account_id["jenkins-infra-team"]
+  name       = "${each.key}-updates-jenkins-io"
+  location   = "${each.value}"
+}
+
+output "zones_ns_records" {
+  value = cloudflare_zone.updates_jenkins_io.name_servers
+}
