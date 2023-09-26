@@ -13,7 +13,7 @@ resource "cloudflare_r2_bucket" "updates_jenkins_io" {
   location   = "${each.value}"
 }
 
-output "zones_ns_records" {
+output "zones_name_servers" {
   value = {
     for k, zone in cloudflare_zone.updates_jenkins_io : k => zone.name_servers
   }
