@@ -14,7 +14,5 @@ resource "cloudflare_r2_bucket" "updates_jenkins_io" {
 }
 
 output "zones_ns_records" {
-  for_each = local.regions
-
-  value = cloudflare_zone.updates_jenkins_io.name_servers[each.key]
+  value = cloudflare_zone.updates_jenkins_io[*].name_servers
 }
