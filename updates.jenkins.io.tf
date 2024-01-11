@@ -10,7 +10,7 @@ resource "cloudflare_r2_bucket" "updates_jenkins_io" {
 
   account_id = local.account_id["jenkins-infra-team"]
   name       = "${each.key}-updates-jenkins-io"
-  location   = "${each.value}"
+  location   = each.value
 }
 
 output "zones_name_servers" {
