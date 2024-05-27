@@ -5,5 +5,6 @@ locals {
 
   regions = {
     westeurope = "WEUR"
+    eastamerica = "ENAM"
   }
 }
