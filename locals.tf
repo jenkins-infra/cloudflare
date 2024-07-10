@@ -4,7 +4,7 @@ locals {
   }
 
   regions = {
-    westeurope = "WEUR"
+    westeurope  = "WEUR"
     eastamerica = "ENAM"
   }
 }
