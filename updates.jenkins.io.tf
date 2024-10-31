@@ -18,3 +18,38 @@ output "zones_name_servers" {
     for k, zone in cloudflare_zone.updates_jenkins_io : k => zone.name_servers
   }
 }
+
+import {
+  id = "account/${local.account_id.jenkins-infra-team}/772143"
+  to = cloudflare_logpush_job.account_audit_logs
+}
+resource "cloudflare_logpush_job" "account_audit_logs" {
+  enabled          = true
+  account_id       = local.account_id.jenkins-infra-team
+  name             = "account-audit-logs-to-datadog"
+  destination_conf = "datadog://http-intake.logs.datadoghq.com/api/v2/logs?header_DD-API-KEY=${var.cloudflare_datadog_api_key}&ddsource=cloudflare&service=updates.jenkins.io&host=cloudflare.jenkins.io"
+  dataset          = "audit_logs"
+
+  output_options {
+    cve20214428      = true
+    sample_rate      = 0
+    timestamp_format = "rfc3339"
+    field_names = [
+      "ActionResult",
+      "ActionType",
+      "ActorEmail",
+      "ActorID",
+      "ActorIP",
+      "ActorType",
+      "ID",
+      "Interface",
+      "Metadata",
+      "NewValue",
+      "OldValue",
+      "OwnerID",
+      "ResourceID",
+      "ResourceType",
+      "When"
+    ]
+  }
+}
