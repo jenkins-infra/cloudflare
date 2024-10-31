@@ -13,16 +13,6 @@ resource "cloudflare_r2_bucket" "updates_jenkins_io" {
   location   = each.value
 }
 
-output "zones_name_servers" {
-  value = {
-    for k, zone in cloudflare_zone.updates_jenkins_io : k => zone.name_servers
-  }
-}
-
-import {
-  id = "account/${local.account_id.jenkins-infra-team}/772143"
-  to = cloudflare_logpush_job.account_audit_logs
-}
 resource "cloudflare_logpush_job" "account_audit_logs" {
   enabled          = true
   account_id       = local.account_id.jenkins-infra-team
@@ -54,12 +44,8 @@ resource "cloudflare_logpush_job" "account_audit_logs" {
   }
 }
 
-import {
-  id = "zone/${cloudflare_zone.updates_jenkins_io["eastamerica"].id}/771340"
-  to = cloudflare_logpush_job.zones_access_logs["eastamerica"]
-}
 resource "cloudflare_logpush_job" "zones_access_logs" {
-  for_each = toset(["eastamerica"])
+  for_each = local.regions
 
   enabled          = true
   zone_id          = cloudflare_zone.updates_jenkins_io[each.key].id
