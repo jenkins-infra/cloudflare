@@ -1,27 +1,20 @@
-parallel(
-  failFast: false,
-  'terraform': {
-    terraform(
-      // TODO: create an empty account for staging
-      // "Read only" token
-      stagingCredentials: [
-        string(variable: 'TF_VAR_cloudflare_api_token', credentialsId:'staging-cloudflare-api-token'),
-        string(variable: 'TF_VAR_cloudflare_datadog_api_key', credentialsId:'cloudflare-datadog-api-key'),
-        file(variable: 'BACKEND_CONFIG_FILE', credentialsId: 'staging-terraform-cloudflare-backend-config'),
-      ],
-      // "Read write" token
-      productionCredentials: [
-        string(variable: 'TF_VAR_cloudflare_api_token', credentialsId:'production-cloudflare-api-token'),
-        string(variable: 'TF_VAR_cloudflare_datadog_api_key', credentialsId:'cloudflare-datadog-api-key'),
-        file(variable: 'BACKEND_CONFIG_FILE', credentialsId: 'production-terraform-cloudflare-backend-config'),
-      ],
-      publishReports: ['jenkins-infra-data-reports/cloudflare.json'],
-    )
-  },
-  'updatecli': {
-    updatecli(action: 'diff')
-    if (env.BRANCH_IS_PRIMARY) {
-      updatecli(action: 'apply', cronTriggerExpression: '@daily')
-    }
-  },
+if (env.BRANCH_IS_PRIMARY) {
+    // Only trigger a daily check on the principal branch
+    properties([pipelineTriggers([cron('@daily')])])
+}
+
+terraform(
+  // "Read only" token
+  stagingCredentials: [
+    string(variable: 'TF_VAR_cloudflare_api_token', credentialsId:'staging-cloudflare-api-token'),
+    string(variable: 'TF_VAR_cloudflare_datadog_api_key', credentialsId:'cloudflare-datadog-api-key'),
+    file(variable: 'BACKEND_CONFIG_FILE', credentialsId: 'staging-terraform-cloudflare-backend-config'),
+  ],
+  // "Read write" token
+  productionCredentials: [
+    string(variable: 'TF_VAR_cloudflare_api_token', credentialsId:'production-cloudflare-api-token'),
+    string(variable: 'TF_VAR_cloudflare_datadog_api_key', credentialsId:'cloudflare-datadog-api-key'),
+    file(variable: 'BACKEND_CONFIG_FILE', credentialsId: 'production-terraform-cloudflare-backend-config'),
+  ],
+  publishReports: ['jenkins-infra-data-reports/cloudflare.json'],
 )
