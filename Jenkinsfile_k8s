@@ -15,6 +15,7 @@ parallel(
         string(variable: 'TF_VAR_cloudflare_datadog_api_key', credentialsId:'cloudflare-datadog-api-key'),
         file(variable: 'BACKEND_CONFIG_FILE', credentialsId: 'production-terraform-cloudflare-backend-config'),
       ],
+      publishReports: ['jenkins-infra-data-reports/cloudflare.json'],
     )
   },
   'updatecli': {
