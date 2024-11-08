@@ -50,7 +50,7 @@ resource "cloudflare_logpush_job" "zones_access_logs" {
   enabled          = true
   zone_id          = cloudflare_zone.updates_jenkins_io[each.key].id
   name             = "${each.key}-access-logs-to-datadog"
-  destination_conf = "datadog://http-intake.logs.datadoghq.com/api/v2/logs?header_DD-API-KEY=${var.cloudflare_datadog_api_key}&ddsource=cloudflare-r2&service=updates.jenkins.io&host=${each.key}.cloudflare.jenkins.io"
+  destination_conf = "datadog://http-intake.logs.datadoghq.com/api/v2/logs?header_DD-API-KEY=${var.cloudflare_datadog_api_key}&ddsource=cloudflare&service=updates.jenkins.io&host=${each.key}.cloudflare.jenkins.io"
   dataset          = "http_requests"
 
   output_options {
