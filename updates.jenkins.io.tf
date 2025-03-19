@@ -1,8 +1,11 @@
 resource "cloudflare_zone" "updates_jenkins_io" {
   for_each = local.regions
 
-  account_id = local.account_id["jenkins-infra-team"]
-  zone       = "${each.key}.cloudflare.jenkins.io"
+  account = {
+    id = local.account_id["jenkins-infra-team"]
+  }
+
+  name = "${each.key}.cloudflare.jenkins.io"
 }
 
 resource "cloudflare_r2_bucket" "updates_jenkins_io" {
@@ -20,7 +23,7 @@ resource "cloudflare_logpush_job" "account_audit_logs" {
   destination_conf = "datadog://http-intake.logs.datadoghq.com/api/v2/logs?header_DD-API-KEY=${var.cloudflare_datadog_api_key}&ddsource=cloudflare&service=updates.jenkins.io&host=cloudflare.jenkins.io"
   dataset          = "audit_logs"
 
-  output_options {
+  output_options = {
     cve20214428      = true
     sample_rate      = 0
     timestamp_format = "rfc3339"
@@ -53,7 +56,7 @@ resource "cloudflare_logpush_job" "zones_access_logs" {
   destination_conf = "datadog://http-intake.logs.datadoghq.com/api/v2/logs?header_DD-API-KEY=${var.cloudflare_datadog_api_key}&ddsource=cloudflare&service=updates.jenkins.io&host=${each.key}.cloudflare.jenkins.io"
   dataset          = "http_requests"
 
-  output_options {
+  output_options = {
     cve20214428      = true
     sample_rate      = 0
     timestamp_format = "rfc3339"
