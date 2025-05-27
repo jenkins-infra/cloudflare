@@ -37,3 +37,5 @@ terraform.rc
 backend-config
 terraform-plan-output.txt
 tfplan
+.grit
+jenkins-infra-data-reports
