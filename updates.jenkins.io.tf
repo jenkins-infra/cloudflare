@@ -1,8 +1,12 @@
 resource "cloudflare_zone" "updates_jenkins_io" {
   for_each = local.regions
 
-  account_id = local.account_id["jenkins-infra-team"]
-  zone       = "${each.key}.cloudflare.jenkins.io"
+  account = {
+    id = local.account_id["jenkins-infra-team"]
+  }
+  name = "${each.key}.cloudflare.jenkins.io"
+  # https://github.com/cloudflare/terraform-provider-cloudflare/issues/5472
+  vanity_name_servers = []
 }
 
 resource "cloudflare_r2_bucket" "updates_jenkins_io" {
@@ -11,17 +15,22 @@ resource "cloudflare_r2_bucket" "updates_jenkins_io" {
   account_id = local.account_id["jenkins-infra-team"]
   name       = "${each.key}-updates-jenkins-io"
   location   = each.value
+  # https://github.com/cloudflare/terraform-provider-cloudflare/issues/5518
+  jurisdiction = "default"
 }
 
+
+# Always changing until https://github.com/cloudflare/terraform-provider-cloudflare/issues/5578 is fixed
 resource "cloudflare_logpush_job" "account_audit_logs" {
   enabled          = true
   account_id       = local.account_id.jenkins-infra-team
   name             = "account-audit-logs-to-datadog"
   destination_conf = "datadog://http-intake.logs.datadoghq.com/api/v2/logs?header_DD-API-KEY=${var.cloudflare_datadog_api_key}&ddsource=cloudflare&service=updates.jenkins.io&host=cloudflare.jenkins.io"
   dataset          = "audit_logs"
+  kind             = null
 
-  output_options {
-    cve20214428      = true
+  output_options = {
+    cve_2021_44228   = true
     sample_rate      = 0
     timestamp_format = "rfc3339"
     field_names = [
@@ -44,6 +53,7 @@ resource "cloudflare_logpush_job" "account_audit_logs" {
   }
 }
 
+# Always changing until https://github.com/cloudflare/terraform-provider-cloudflare/issues/5578 is fixed
 resource "cloudflare_logpush_job" "zones_access_logs" {
   for_each = local.regions
 
@@ -53,8 +63,8 @@ resource "cloudflare_logpush_job" "zones_access_logs" {
   destination_conf = "datadog://http-intake.logs.datadoghq.com/api/v2/logs?header_DD-API-KEY=${var.cloudflare_datadog_api_key}&ddsource=cloudflare&service=updates.jenkins.io&host=${each.key}.cloudflare.jenkins.io"
   dataset          = "http_requests"
 
-  output_options {
-    cve20214428      = true
+  output_options = {
+    cve_2021_44228   = true
     sample_rate      = 0
     timestamp_format = "rfc3339"
     field_names = [
