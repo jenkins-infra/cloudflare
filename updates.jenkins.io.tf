@@ -19,6 +19,39 @@ resource "cloudflare_r2_bucket" "updates_jenkins_io" {
   jurisdiction = "default"
 }
 
+## Borrowed from https://github.com/Cyb3r-Jak3/terraform-cloudflare-r2-api-token
+data "cloudflare_account_api_token_permission_groups_list" "this" {
+  account_id = local.account_id.jenkins-infra-team
+}
+resource "cloudflare_account_token" "r2_updates_jenkins_io" {
+  for_each = local.regions
+
+  account_id = local.account_id.jenkins-infra-team
+  name       = "r2-${each.key}-updates-jenkins-io"
+
+  policies = [{
+    effect = "allow"
+    resources = {
+      "com.cloudflare.edge.r2.bucket.${local.account_id.jenkins-infra-team}_${cloudflare_r2_bucket.updates_jenkins_io[each.key].jurisdiction}_${cloudflare_r2_bucket.updates_jenkins_io[each.key].id}" = "*",
+    }
+    permission_groups = [
+      {
+        id = local.r2_api_permissions["Workers R2 Storage Bucket Item Write"],
+      },
+    ]
+  }]
+
+  not_before = timeadd(local.r2_token_expiration_date, "-2208h")
+  expires_on = local.r2_token_expiration_date
+
+  condition = {
+    request_ip = {
+      in = flatten(concat(
+        [for key, value in local.r2_allowed_ips : value],
+      ))
+    }
+  }
+}
 
 # Always changing until https://github.com/cloudflare/terraform-provider-cloudflare/issues/5578 is fixed
 resource "cloudflare_logpush_job" "account_audit_logs" {
