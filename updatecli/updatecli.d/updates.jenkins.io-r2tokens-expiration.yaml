@@ -1,0 +1,68 @@
+---
+# yamllint disable rule:line-length
+name: Generate a new expiration date for the R2 tokens of updates.jenkins.io
+
+scms:
+  default:
+    kind: github
+    spec:
+      user: "{{ $.github.user }}"
+      email: "{{ $.github.email }}"
+      owner: "{{ $.github.owner }}"
+      repository: "{{ $.github.repository }}"
+      token: "{{ requiredEnv $.github.token }}"
+      username: "{{ $.github.username }}"
+      branch: "{{ $.github.branch }}"
+
+sources:
+  currentExpirationDate:
+    # TODO
+    name: Get current `expiration_date` date
+    kind: hcl
+    spec:
+      file: ./locals.tf
+      path: locals.r2_token_expiration_date
+  nextExpirationDate:
+    name: Prepare next `expiration_date` date within 3 months
+    kind: shell
+    spec:
+      command: bash ./updatecli/scripts/dateadd.sh
+
+conditions:
+  checkIfExpirationDateSoonExpired:
+    kind: shell
+    sourceid: currentExpirationDate
+    spec:
+      # Current expiration_date date value passed as argument
+      command: bash ./updatecli/scripts/datediff.sh
+
+targets:
+  updateNextExpirationDate:
+    # TODO
+    name: Update expiration date for the updates.jenkins.io R2 buckets
+    kind: hcl
+    sourceid: nextExpirationDate
+    spec:
+      file: ./locals.tf
+      path: locals.r2_token_expiration_date
+    scmid: default
+
+actions:
+  default:
+    kind: github/pullrequest
+    scmid: default
+    spec:
+      title: Update the expiration date of the `updates.jenkins.io`` R2 tokens to {{ source "nextExpirationDate" }}
+      labels:
+        - cloudflare
+        - updates.jenkins.io
+      description: |
+        This PR updates the expiration date of expiration date of the `updates.jenkins.io`` R2 tokens.
+
+        The current expiration date is set to `{{ source "currentExpirationDate" }}` and it should be updated to {{ source "nextExpirationDate" }}.
+
+        > [!IMPORTANT]
+        > After applying this change, the Update Center generation in `trusted.ci.jenkins.io`` will fail until the credentials are uploaded to the controller.
+        > Check the (private) script <https://github.com/jenkins-infra/charts-secrets/blob/main/config/trusted.ci.jenkins.io/get-uc-sync-zip-credential.sh> **BEFORE** merging the PR.
+        > Use this script to generate a new ZIP file to upload ot trusted.ci.jenkins.io.
+...
