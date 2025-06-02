@@ -52,7 +52,7 @@ actions:
     kind: github/pullrequest
     scmid: default
     spec:
-      title: Update the expiration date of the `updates.jenkins.io`` R2 tokens to {{ source "nextExpirationDate" }}
+      title: Update the expiration date of the `updates.jenkins.io` R2 tokens to {{ source "nextExpirationDate" }}
       labels:
         - cloudflare
         - updates.jenkins.io
