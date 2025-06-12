@@ -57,12 +57,12 @@ actions:
         - cloudflare
         - updates.jenkins.io
       description: |
-        This PR updates the expiration date of expiration date of the `updates.jenkins.io`` R2 tokens.
+        This PR updates the expiration date of expiration date of the `updates.jenkins.io` R2 tokens.
 
         The current expiration date is set to `{{ source "currentExpirationDate" }}` and it should be updated to {{ source "nextExpirationDate" }}.
 
         > [!IMPORTANT]
-        > After applying this change, the Update Center generation in `trusted.ci.jenkins.io`` will fail until the credentials are uploaded to the controller.
+        > After applying this change, the Update Center generation in `trusted.ci.jenkins.io` will fail until the credentials are uploaded to the controller.
         > Check the (private) script <https://github.com/jenkins-infra/charts-secrets/blob/main/config/trusted.ci.jenkins.io/get-uc-sync-zip-credential.sh> **BEFORE** merging the PR.
-        > Use this script to generate a new ZIP file to upload ot trusted.ci.jenkins.io.
+        > Use this script to generate a new ZIP file to upload ot trusted.ci.jenkins.io (credential name: `update-center-publish-env`).
 ...
