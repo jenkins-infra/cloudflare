@@ -20,11 +20,5 @@ locals {
     "trusted.jenkins.io" = [
       "104.209.128.236/32", # Outbound IP of the trusted virtual network NAT gateway
     ],
-    # Trusted agents outbound IPs retrievable in https://github.com/jenkins-infra/azure-net/blob/7aa7fc5a8a39dd7bafee0e89c4fffe096692baa8/outputs.tf#L11-L13
-    "trusted.sponsorship.jenkins.io" = [
-      "172.177.128.34/32",
-      "172.210.175.108/32",
-      "172.210.170.228/32",
-    ],
   }
 }
