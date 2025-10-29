@@ -19,6 +19,17 @@ resource "cloudflare_r2_bucket" "updates_jenkins_io" {
   jurisdiction = "default"
 }
 
+resource "cloudflare_r2_custom_domain" "updates_jenkins_io" {
+  for_each = local.regions
+
+  account_id  = local.account_id["jenkins-infra-team"]
+  bucket_name = cloudflare_r2_bucket.updates_jenkins_io[each.key].name
+  domain      = cloudflare_zone.updates_jenkins_io[each.key].name
+  enabled     = true
+  zone_id     = cloudflare_zone.updates_jenkins_io[each.key].id
+  min_tls     = "1.0"
+}
+
 ## Borrowed from https://github.com/Cyb3r-Jak3/terraform-cloudflare-r2-api-token
 data "cloudflare_account_api_token_permission_groups_list" "this" {
   account_id = local.account_id.jenkins-infra-team
