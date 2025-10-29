@@ -27,7 +27,7 @@ resource "cloudflare_r2_custom_domain" "updates_jenkins_io" {
   domain      = cloudflare_zone.updates_jenkins_io[each.key].name
   enabled     = true
   zone_id     = cloudflare_zone.updates_jenkins_io[each.key].id
-  min_tls     = "1.0"
+  min_tls     = "1.2"
 }
 
 ## Borrowed from https://github.com/Cyb3r-Jak3/terraform-cloudflare-r2-api-token
