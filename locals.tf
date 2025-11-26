@@ -8,7 +8,7 @@ locals {
     eastamerica = "ENAM"
   }
 
-  r2_token_expiration_date = "2026-02-23T00:00:00Z"
+  r2_token_expiration_date = "2026-02-24T00:00:00Z"
 
   r2_api_permissions = {
     for x in data.cloudflare_account_api_token_permission_groups_list.this.result :
