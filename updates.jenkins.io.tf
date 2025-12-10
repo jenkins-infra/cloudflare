@@ -42,9 +42,9 @@ resource "cloudflare_account_token" "r2_updates_jenkins_io" {
 
   policies = [{
     effect = "allow"
-    resources = {
+    resources = jsonencode({
       "com.cloudflare.edge.r2.bucket.${local.account_id.jenkins-infra-team}_${cloudflare_r2_bucket.updates_jenkins_io[each.key].jurisdiction}_${cloudflare_r2_bucket.updates_jenkins_io[each.key].id}" = "*",
-    }
+    })
     permission_groups = [
       {
         id = local.r2_api_permissions["Workers R2 Storage Bucket Item Write"],
