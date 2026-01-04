@@ -20,5 +20,8 @@ locals {
     "trusted.jenkins.io" = [
       "104.209.128.236/32", # Outbound IP of the trusted virtual network NAT gateway
     ],
+    "dduportal" = [
+      "86.207.165.174/32",
+    ],
   }
 }
