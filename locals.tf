@@ -18,11 +18,7 @@ locals {
 
   r2_allowed_ips = {
     "trusted.jenkins.io" = [
-      "104.209.128.236/32", # Outbound IP of the trusted virtual network NAT gateway
-      "20.110.255.213/32",
-    ],
-    "dduportal" = [
-      "86.207.165.174/32",
+      "20.110.255.213/32", # Outbound IP of the trusted virtual network NAT gateway
     ],
   }
 }
