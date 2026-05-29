@@ -1,16 +1,10 @@
-if (env.BRANCH_IS_PRIMARY) {
-    // Only trigger a daily check on the principal branch
-    properties([pipelineTriggers([cron('@daily')])])
-}
-
 terraform(
-  // "Read only" token
+  cronTriggerExpression: env.BRANCH_IS_PRIMARY ? '@daily' : '',
   stagingCredentials: [
     string(variable: 'TF_VAR_cloudflare_api_token', credentialsId:'staging-cloudflare-api-token'),
     string(variable: 'TF_VAR_cloudflare_datadog_api_key', credentialsId:'cloudflare-datadog-api-key'),
     file(variable: 'BACKEND_CONFIG_FILE', credentialsId: 'staging-terraform-cloudflare-backend-config'),
   ],
-  // "Read write" token
   productionCredentials: [
     string(variable: 'TF_VAR_cloudflare_api_token', credentialsId:'production-cloudflare-api-token'),
     string(variable: 'TF_VAR_cloudflare_datadog_api_key', credentialsId:'cloudflare-datadog-api-key'),
