@@ -1,0 +1,5 @@
+resource_group_name  = "tf-remote-state-cloudflare-production-A7EX1o"
+storage_account_name = "cloudflareproducta7ex1o"
+container_name       = "cloudflareproducta7ex1o"
+client_id            = "193f845c-88cb-482c-98e5-347aee6a4fa6"
+# client_secret      = "" # Specified through the env. variable $TF_BACKEND_ARM_CLIENT_SECRET

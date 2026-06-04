@@ -1,0 +1,5 @@
+resource_group_name  = "tf-remote-state-cloudflare-staging-sx4uXK"
+storage_account_name = "cloudflarestagingsx4uxk"
+container_name       = "cloudflarestagingsx4uxk"
+client_id            = "64d194ea-af01-487d-91bc-31c70556565f"
+# client_secret      = "" # Specified through the env. variable $TF_BACKEND_ARM_CLIENT_SECRET
