@@ -75,7 +75,6 @@ resource "cloudflare_logpush_job" "account_audit_logs" {
 
   output_options = {
     cve_2021_44228   = true
-    sample_rate      = 0
     timestamp_format = "rfc3339"
     field_names = [
       "ActionResult",
@@ -109,10 +108,8 @@ resource "cloudflare_logpush_job" "zones_access_logs" {
 
   output_options = {
     cve_2021_44228   = true
-    sample_rate      = 0
     timestamp_format = "rfc3339"
     field_names = [
-      "RayID",
       "CacheCacheStatus",
       "CacheReserveUsed",
       "CacheResponseBytes",
@@ -157,13 +154,14 @@ resource "cloudflare_logpush_job" "zones_access_logs" {
       "OriginRequestHeaderSendDurationMs",
       "OriginResponseBytes",
       "OriginResponseDurationMs",
-      "OriginResponseHeaderReceiveDurationMs",
       "OriginResponseHTTPExpires",
       "OriginResponseHTTPLastModified",
+      "OriginResponseHeaderReceiveDurationMs",
       "OriginResponseStatus",
       "OriginResponseTime",
       "OriginTCPHandshakeDurationMs",
       "OriginTLSHandshakeDurationMs",
+      "RayID",
       "RequestHeaders",
       "ResponseHeaders",
       "SecurityAction",
